@@ -23,6 +23,7 @@
 @property (retain) AVAudioPlayer *player;
 @property BOOL needToPlayAfterStopRecord, needToRecordAfterStopRecord, needToRemoveRecordAfterStopRecord;
 @property (retain) NSString *recordTmpFilePath, *recordTmpFolderPath;
+@property (retain) NSStatusItem *theStatusBarItem;
 
 - (IBAction)beginToRecord:(id)sender;
 - (IBAction)beginToReplay:(id)sender;
@@ -36,6 +37,7 @@
 @synthesize audioDeviceInput, audioFileOutput, session, player;
 @synthesize needToPlayAfterStopRecord, needToRecordAfterStopRecord, needToRemoveRecordAfterStopRecord;
 @synthesize recordTmpFilePath, recordTmpFolderPath;
+@synthesize theStatusBarItem;
 
 -(instancetype) init
 {
@@ -137,6 +139,11 @@
 }
 
 - (IBAction)beginToRecord:(id)sender {
+    [self record];
+}
+
+- (void)record {
+    NSLog(@"record");
     if (player) {
         NSLog(@"stop player");
         if ([player isPlaying]) {
@@ -155,6 +162,10 @@
 }
 
 - (IBAction)beginToReplay:(id)sender {
+    [self play];
+}
+
+- (void)play {
     NSLog(@"beign to replay the record sound...");
     if ([session isRunning]) {
         needToPlayAfterStopRecord = TRUE;
@@ -208,6 +219,7 @@
 
 - (void)awakeFromNib {
     NSLog(@"awakeFromNib, init components");
+    [self activateStatusMenu];
 
 }
 
@@ -236,6 +248,34 @@
             //[fm removeItemAtPath:recordTmpFolderPath error:nil];
         }
     }
+}
+
+- (void)activateStatusMenu
+
+{
+
+    NSStatusBar *bar = [NSStatusBar systemStatusBar];
+
+    theStatusBarItem = [bar statusItemWithLength:NSVariableStatusItemLength];
+    [theStatusBarItem setTitle: NSLocalizedString(@"Tablet",@"")];
+
+    [theStatusBarItem setHighlightMode:YES];
+    
+    NSStatusBarButton *button = [theStatusBarItem button];
+    button.image = [[NSImage alloc] initWithContentsOfURL:[[NSBundle mainBundle] URLForImageResource:@"urecord_32x32.png"]];
+    button.imagePosition = NSImageLeft;
+    button.toolTip = @"tool tips";
+    button.title = @"00:00";
+
+    // menu
+    NSMenu *menu = [[NSMenu alloc] initWithTitle:@"operator menu"];
+    theStatusBarItem.menu = menu;
+
+    NSMenuItem *recordMenuItem = [[NSMenuItem alloc] initWithTitle:@"Record" action:@selector(record) keyEquivalent:@"F10"];
+    [menu insertItem:recordMenuItem atIndex:0];
+
+    NSMenuItem *playMenuItem = [[NSMenuItem alloc] initWithTitle:@"Play" action:@selector(play) keyEquivalent:@"F11"];
+    [menu insertItem:playMenuItem atIndex:1];
 }
 
 @end
