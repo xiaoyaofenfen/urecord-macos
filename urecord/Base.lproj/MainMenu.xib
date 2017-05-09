@@ -14,6 +14,7 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate">
             <connections>
+                <outlet property="audioLevelMeter" destination="Cbp-gO-lul" id="lac-B0-3lS"/>
                 <outlet property="recordButton" destination="3gy-U8-nuP" id="Idm-CG-gdt"/>
                 <outlet property="replayButton" destination="IfE-IN-Lw0" id="OR0-6D-it4"/>
                 <outlet property="timeLabel" destination="OG5-TZ-8f9" id="qLy-Ux-bbo"/>
@@ -673,14 +674,14 @@
         <window title="URecord" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="335" y="390" width="379" height="81"/>
+            <rect key="contentRect" x="335" y="390" width="379" height="104"/>
             <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <view key="contentView" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="379" height="81"/>
+                <rect key="frame" x="0.0" y="0.0" width="379" height="104"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3gy-U8-nuP">
-                        <rect key="frame" x="14" y="33" width="81" height="32"/>
+                        <rect key="frame" x="14" y="35" width="81" height="32"/>
                         <buttonCell key="cell" type="push" title="Record" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="lLx-dK-rb1">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -690,7 +691,7 @@
                         </connections>
                     </button>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OG5-TZ-8f9">
-                        <rect key="frame" x="118" y="42" width="139" height="17"/>
+                        <rect key="frame" x="118" y="65" width="139" height="17"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="00:00" id="SBq-d0-C9e">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -698,7 +699,7 @@
                         </textFieldCell>
                     </textField>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IfE-IN-Lw0">
-                        <rect key="frame" x="284" y="31" width="81" height="32"/>
+                        <rect key="frame" x="284" y="35" width="81" height="32"/>
                         <buttonCell key="cell" type="push" title="Replay" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="fis-tD-LSp">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -707,9 +708,19 @@
                             <action selector="beginToReplay:" target="Voe-Tx-rLC" id="iCt-pa-NIf"/>
                         </connections>
                     </button>
+                    <levelIndicator verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Cbp-gO-lul">
+                        <rect key="frame" x="141" y="39" width="96" height="18"/>
+                        <levelIndicatorCell key="cell" alignment="left" doubleValue="2" maxValue="10" warningValue="10" criticalValue="10" id="F1C-Vn-e27"/>
+                    </levelIndicator>
                 </subviews>
             </view>
-            <point key="canvasLocation" x="254.5" y="311.5"/>
+            <point key="canvasLocation" x="254.5" y="323"/>
         </window>
+        <levelIndicator verticalHuggingPriority="750" id="0xv-5k-3wz">
+            <rect key="frame" x="0.0" y="0.0" width="96" height="18"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <levelIndicatorCell key="cell" alignment="left" doubleValue="2" maxValue="2" warningValue="2" criticalValue="2" id="FD8-Bb-f3r"/>
+            <point key="canvasLocation" x="661" y="619"/>
+        </levelIndicator>
     </objects>
 </document>

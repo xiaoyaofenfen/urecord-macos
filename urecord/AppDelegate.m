@@ -16,6 +16,7 @@
 @property (weak) IBOutlet NSButton *recordButton;
 @property (weak) IBOutlet NSButton *replayButton;
 @property (weak) IBOutlet NSTextField *timeLabel;
+@property (assign) IBOutlet NSLevelIndicator *audioLevelMeter;
 
 @property (retain) AVCaptureDeviceInput *audioDeviceInput;
 @property (retain) AVCaptureAudioFileOutput *audioFileOutput;
@@ -24,6 +25,7 @@
 @property BOOL needToPlayAfterStopRecord, needToRecordAfterStopRecord, needToRemoveRecordAfterStopRecord;
 @property (retain) NSString *recordTmpFilePath, *recordTmpFolderPath;
 @property (retain) NSStatusItem *theStatusBarItem;
+@property (assign) NSTimer *audioLevelTimer;
 
 - (IBAction)beginToRecord:(id)sender;
 - (IBAction)beginToReplay:(id)sender;
@@ -33,11 +35,11 @@
 
 @implementation AppDelegate
 
-@synthesize recordButton, replayButton, timeLabel;
+@synthesize recordButton, replayButton, timeLabel, audioLevelMeter;
 @synthesize audioDeviceInput, audioFileOutput, session, player;
 @synthesize needToPlayAfterStopRecord, needToRecordAfterStopRecord, needToRemoveRecordAfterStopRecord;
 @synthesize recordTmpFilePath, recordTmpFolderPath;
-@synthesize theStatusBarItem;
+@synthesize theStatusBarItem, audioLevelTimer;
 
 -(instancetype) init
 {
@@ -221,10 +223,14 @@
     NSLog(@"awakeFromNib, init components");
     [self activateStatusMenu];
 
+    // Start updating the audio level meter
+    [self setAudioLevelTimer:[NSTimer scheduledTimerWithTimeInterval:0.1f target:self selector:@selector(updateAudioLevels:) userInfo:nil repeats:YES]];
 }
 
 - (void)windowWillClose:(NSNotification *)notification {
     NSLog(@"window will close, release the resource...");
+
+    [[self audioLevelTimer] invalidate];
 
     if (player) {
         NSLog(@"stop player");
@@ -248,6 +254,24 @@
             //[fm removeItemAtPath:recordTmpFolderPath error:nil];
         }
     }
+}
+
+- (void)updateAudioLevels:(NSTimer *)timer
+{
+    NSInteger channelCount = 0;
+    float decibels = 0.f;
+
+    // Sum all of the average power levels and divide by the number of channels
+    for (AVCaptureConnection *connection in [[self audioFileOutput] connections]) {
+        for (AVCaptureAudioChannel *audioChannel in [connection audioChannels]) {
+            decibels += [audioChannel averagePowerLevel];
+            channelCount += 1;
+        }
+    }
+
+    decibels /= channelCount;
+
+    [[self audioLevelMeter] setFloatValue:(pow(10.f, 0.05f * decibels) * 20.0f)];
 }
 
 - (void)activateStatusMenu
