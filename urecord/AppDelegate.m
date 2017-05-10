@@ -154,11 +154,15 @@
     }
     if ([session isRunning]) {
         NSLog(@"stop preview record process...");
+        [[self audioLevelTimer] invalidate];
         needToPlayAfterStopRecord = FALSE;
         needToRecordAfterStopRecord = TRUE;
         [audioFileOutput stopRecording];
         [session stopRunning];
     } else {
+        
+        // Start updating the audio level meter
+        [self setAudioLevelTimer:[NSTimer scheduledTimerWithTimeInterval:0.1f target:self selector:@selector(updateAudioLevels:) userInfo:nil repeats:YES]];
         [self recordTheFile:recordTmpFilePath];
     }
 }
@@ -170,6 +174,7 @@
 - (void)play {
     NSLog(@"beign to replay the record sound...");
     if ([session isRunning]) {
+        [[self audioLevelTimer] invalidate];
         needToPlayAfterStopRecord = TRUE;
         needToRecordAfterStopRecord = FALSE;
         [audioFileOutput stopRecording];
@@ -222,9 +227,6 @@
 - (void)awakeFromNib {
     NSLog(@"awakeFromNib, init components");
     [self activateStatusMenu];
-
-    // Start updating the audio level meter
-    [self setAudioLevelTimer:[NSTimer scheduledTimerWithTimeInterval:0.1f target:self selector:@selector(updateAudioLevels:) userInfo:nil repeats:YES]];
 }
 
 - (void)windowWillClose:(NSNotification *)notification {
@@ -287,9 +289,9 @@
     
     NSStatusBarButton *button = [theStatusBarItem button];
     button.image = [[NSImage alloc] initWithContentsOfURL:[[NSBundle mainBundle] URLForImageResource:@"urecord_32x32.png"]];
-    button.imagePosition = NSImageLeft;
-    button.toolTip = @"tool tips";
-    button.title = @"00:00";
+    //button.imagePosition = NSImageLeft;
+    button.toolTip = @"record and replay sound";
+    //button.title = @"00:00";
 
     // menu
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"operator menu"];

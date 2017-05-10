@@ -26,6 +26,8 @@
 	<string>Copyright © 2017年 Imagination Studio. All rights reserved.</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
+	<key>CFBundleIconFile</key>
+	<string>AppIcon</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>

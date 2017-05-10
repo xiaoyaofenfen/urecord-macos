@@ -710,7 +710,7 @@
                     </button>
                     <levelIndicator verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Cbp-gO-lul">
                         <rect key="frame" x="141" y="39" width="96" height="18"/>
-                        <levelIndicatorCell key="cell" alignment="left" doubleValue="2" maxValue="10" warningValue="10" criticalValue="10" id="F1C-Vn-e27"/>
+                        <levelIndicatorCell key="cell" alignment="left" maxValue="10" warningValue="10" criticalValue="10" id="F1C-Vn-e27"/>
                     </levelIndicator>
                 </subviews>
             </view>
